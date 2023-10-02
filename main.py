@@ -2,6 +2,7 @@ import requests
 from pathlib import Path
 from os.path import splitext
 from urllib.parse import unquote, urlsplit
+from environs import Env
 
 
 def get_file_extension(url):
@@ -21,8 +22,8 @@ def save_image(link, image_name):
         image.write(response.content)
 
 
-def main():
-    response = requests.get('https://xkcd.com/353/info.0.json')
+def get_comics(link):
+    response = requests.get(link)
     response.raise_for_status()
     response_content = response.json()
     image_name = response_content['title']
@@ -30,6 +31,28 @@ def main():
     save_image(image_link, image_name)
     image_comment = response_content['alt']
     print(image_comment)
+
+
+def work_with_vk_api(access_token):
+    full_group_info = 1
+    api_version = 5.154
+    payload = {
+        'access_token': access_token,
+        'extended': full_group_info,
+        'v': api_version
+    }
+    url = 'https://api.vk.com/method/groups.get'
+    response = requests.get(url, params=payload)
+    print(response.json())
+
+
+def main():
+    env = Env()
+    env.read_env()
+    vk_client_id = env.int('VK_CLIENT_ID')
+    vk_access_token = env.str('VK_ACCESS_TOKEN')
+    # get_comics('https://xkcd.com/353/info.0.json')
+    work_with_vk_api(vk_access_token)
 
 
 if __name__ == '__main__':
