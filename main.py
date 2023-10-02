@@ -28,6 +28,8 @@ def main():
     image_name = response_content['title']
     image_link = response_content['img']
     save_image(image_link, image_name)
+    image_comment = response_content['alt']
+    print(image_comment)
 
 
 if __name__ == '__main__':
