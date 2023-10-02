@@ -33,7 +33,7 @@ def get_comics(link):
     print(image_comment)
 
 
-def work_with_vk_api(access_token):
+def get_vk_groups(access_token):
     full_group_info = 1
     api_version = 5.154
     payload = {
@@ -46,13 +46,41 @@ def work_with_vk_api(access_token):
     print(response.json())
 
 
+def get_vk_url_to_upload_img(access_token, group_id):
+    api_version = 5.154
+    payload = {
+        'access_token': access_token,
+        'group_id': group_id,
+        'v': api_version
+    }
+    url = 'https://api.vk.com/method/photos.getWallUploadServer'
+    response = requests.get(url, params=payload)
+    response.raise_for_status()
+    return response.json()['response']['upload_url']
+
+
+def send_image_to_vk_wall(img_path, ulr_address):
+    with open(img_path, 'rb') as file:
+        url = ulr_address
+        files = {
+            'photo': file,
+        }
+        response = requests.post(url, files=files)
+        response.raise_for_status()
+        print(response.json())
+
+
 def main():
     env = Env()
     env.read_env()
     vk_client_id = env.int('VK_CLIENT_ID')
     vk_access_token = env.str('VK_ACCESS_TOKEN')
+    vk_group_id = env.int('VK_GROUP_ID')
     # get_comics('https://xkcd.com/353/info.0.json')
-    work_with_vk_api(vk_access_token)
+    # get_vk_groups(vk_access_token)
+    # get_vk_url_to_upload_img(vk_access_token, vk_group_id)
+    url_address = get_vk_url_to_upload_img(vk_access_token, vk_group_id)
+    send_image_to_vk_wall('images/Python.png', url_address)
 
 
 if __name__ == '__main__':
