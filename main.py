@@ -4,6 +4,7 @@ from os.path import splitext
 from urllib.parse import unquote, urlsplit
 from environs import Env
 import random
+import os
 
 
 def get_file_extension(url):
@@ -121,6 +122,7 @@ def main():
     get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     url_address = get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     uploaded_photo = send_image_to_vk_wall(f'images/{comics_img_name}{comics_image_ext}', url_address)
+    os.remove(f'images/{comics_img_name}{comics_image_ext}')
     saved_image = save_wall_image(vk_access_token, vk_group_id, uploaded_photo)
     create_wall_post(vk_access_token, vk_group_id, *saved_image, comics_img_comment)
 
