@@ -36,20 +36,6 @@ def get_comics(link):
     return image_name, image_extension, image_comment
 
 
-def get_vk_groups(access_token):
-    full_group_info = 1
-    api_version = 5.154
-    payload = {
-        'access_token': access_token,
-        'extended': full_group_info,
-        'v': api_version
-    }
-    url = 'https://api.vk.com/method/groups.get'
-    response = requests.get(url, params=payload)
-    response.raise_for_status()
-    print(response.json())
-
-
 def get_vk_url_to_upload_img(access_token, group_id):
     api_version = 5.154
     payload = {
