@@ -3,6 +3,7 @@ from pathlib import Path
 from os.path import splitext
 from urllib.parse import unquote, urlsplit
 from environs import Env
+import random
 
 
 def get_file_extension(url):
@@ -102,12 +103,21 @@ def create_wall_post(access_token, group_id, saved_image, comment):
     response.raise_for_status()
 
 
+def get_random_comics_url():
+    url = 'https://xkcd.com/info.0.json'
+    response = requests.get(url)
+    response.raise_for_status()
+    max_comics_number = response.json()['num']
+    random_comics_number = random.randrange(1, max_comics_number + 1)
+    return f'https://xkcd.com/{random_comics_number}/info.0.json'
+
+
 def main():
     env = Env()
     env.read_env()
     vk_access_token = env.str('VK_ACCESS_TOKEN')
     vk_group_id = env.int('VK_GROUP_ID')
-    comics_img_name, comics_image_ext, comics_img_comment = get_comics('https://xkcd.com/353/info.0.json')
+    comics_img_name, comics_image_ext, comics_img_comment = get_comics(get_random_comics_url())
     get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     url_address = get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     uploaded_photo = send_image_to_vk_wall(f'images/{comics_img_name}{comics_image_ext}', url_address)
