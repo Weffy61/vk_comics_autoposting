@@ -1,6 +1,6 @@
 # Vk auto posting comics script
 
-Скрипт постит в [vk](https://vk.com) рандомные комиксы  с [xkcd.com](https://xkcd.com/) c коментариями авторов.
+Скрипт постит в [vk](https://vk.com) рандомные комиксы  с [xkcd.com](https://xkcd.com/) c коментарием автора.
 
 ## Установка
 
