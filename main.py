@@ -56,7 +56,7 @@ def upload_image(img_path, ulr_address):
         }
         response = requests.post(ulr_address, files=files)
         response.raise_for_status()
-        return response.json()
+    return response.json()
 
 
 def save_wall_image(access_token, group_id, photo):
