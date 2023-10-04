@@ -36,7 +36,7 @@ def get_comic(link):
     return image_name, image_extension, image_comment
 
 
-def get_vk_url_to_upload_img(access_token, group_id):
+def get_upload_url(access_token, group_id):
     api_version = 5.154
     payload = {
         'access_token': access_token,
@@ -105,8 +105,8 @@ def main():
     vk_access_token = env.str('VK_ACCESS_TOKEN')
     vk_group_id = env.int('VK_GROUP_ID')
     comics_img_name, comics_image_ext, comics_img_comment = get_comic(get_random_comics_url())
-    get_vk_url_to_upload_img(vk_access_token, vk_group_id)
-    url_address = get_vk_url_to_upload_img(vk_access_token, vk_group_id)
+    get_upload_url(vk_access_token, vk_group_id)
+    url_address = get_upload_url(vk_access_token, vk_group_id)
     img_path = os.path.join('images', f'{comics_img_name}{comics_image_ext}')
     uploaded_photo = send_image_to_vk_wall(img_path, url_address)
     os.remove(img_path)
