@@ -15,7 +15,7 @@ def get_file_extension(url):
 
 def save_image(link, image_name):
     image_extension = get_file_extension(link)
-    path = f'images/{image_name}{image_extension}'
+    path = os.path.join('images', f'{image_name}{image_extension}')
     image_path = Path(path).parent
     image_path.mkdir(parents=True, exist_ok=True)
     response = requests.get(link)
@@ -107,8 +107,9 @@ def main():
     comics_img_name, comics_image_ext, comics_img_comment = get_comic(get_random_comics_url())
     get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     url_address = get_vk_url_to_upload_img(vk_access_token, vk_group_id)
-    uploaded_photo = send_image_to_vk_wall(f'images/{comics_img_name}{comics_image_ext}', url_address)
-    os.remove(f'images/{comics_img_name}{comics_image_ext}')
+    img_path = os.path.join('images', f'{comics_img_name}{comics_image_ext}')
+    uploaded_photo = send_image_to_vk_wall(img_path, url_address)
+    os.remove(img_path)
     saved_image = save_wall_image(vk_access_token, vk_group_id, uploaded_photo)
     create_wall_post(vk_access_token, vk_group_id, *saved_image, comics_img_comment)
 
