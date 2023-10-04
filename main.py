@@ -49,12 +49,12 @@ def get_upload_url(access_token, group_id):
     return response.json()['response']['upload_url']
 
 
-def upload_image(img_path, ulr_address):
+def upload_image(img_path, url_address):
     with open(img_path, 'rb') as file:
         files = {
             'photo': file,
         }
-        response = requests.post(ulr_address, files=files)
+        response = requests.post(url_address, files=files)
     response.raise_for_status()
     return response.json()
 
