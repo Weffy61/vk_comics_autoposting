@@ -25,7 +25,7 @@ def save_image(link, image_name):
     return image_extension
 
 
-def get_comics(link):
+def get_comic(link):
     response = requests.get(link)
     response.raise_for_status()
     response_content = response.json()
