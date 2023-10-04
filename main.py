@@ -55,7 +55,7 @@ def upload_image(img_path, ulr_address):
             'photo': file,
         }
         response = requests.post(ulr_address, files=files)
-        response.raise_for_status()
+    response.raise_for_status()
     return response.json()
 
 
