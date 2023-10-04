@@ -104,7 +104,7 @@ def main():
     env.read_env()
     vk_access_token = env.str('VK_ACCESS_TOKEN')
     vk_group_id = env.int('VK_GROUP_ID')
-    comics_img_name, comics_image_ext, comics_img_comment = get_comics(get_random_comics_url())
+    comics_img_name, comics_image_ext, comics_img_comment = get_comic(get_random_comics_url())
     get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     url_address = get_vk_url_to_upload_img(vk_access_token, vk_group_id)
     uploaded_photo = send_image_to_vk_wall(f'images/{comics_img_name}{comics_image_ext}', url_address)
