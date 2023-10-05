@@ -16,8 +16,6 @@ def get_file_extension(url):
 def save_image(link, image_name):
     image_extension = get_file_extension(link)
     path = os.path.join('images', f'{image_name}{image_extension}')
-    image_path = Path(path).parent
-    image_path.mkdir(parents=True, exist_ok=True)
     response = requests.get(link)
     response.raise_for_status()
     with open(f'{path}', 'wb') as image:
@@ -104,6 +102,7 @@ def main():
     env.read_env()
     vk_access_token = env.str('VK_ACCESS_TOKEN')
     vk_group_id = env.int('VK_GROUP_ID')
+    os.makedirs('images', exist_ok=True)
     comics_img_name, comics_image_ext, comics_img_comment = get_comic(get_random_comics_url())
     get_upload_url(vk_access_token, vk_group_id)
     url_address = get_upload_url(vk_access_token, vk_group_id)
