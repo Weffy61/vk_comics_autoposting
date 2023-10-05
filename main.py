@@ -107,8 +107,10 @@ def main():
     get_upload_url(vk_access_token, vk_group_id)
     url_address = get_upload_url(vk_access_token, vk_group_id)
     img_path = os.path.join('images', f'{comics_img_name}{comics_image_ext}')
-    uploaded_photo = upload_image(img_path, url_address)
-    os.remove(img_path)
+    try:
+        uploaded_photo = upload_image(img_path, url_address)
+    finally:
+        os.remove(img_path)
     saved_image = save_wall_image(vk_access_token, vk_group_id, uploaded_photo)
     create_wall_post(vk_access_token, vk_group_id, *saved_image, comics_img_comment)
 
