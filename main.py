@@ -1,5 +1,4 @@
 import requests
-from pathlib import Path
 from os.path import splitext
 from urllib.parse import unquote, urlsplit
 from environs import Env
