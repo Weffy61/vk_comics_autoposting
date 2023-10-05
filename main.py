@@ -54,33 +54,39 @@ def upload_image(img_path, url_address):
         }
         response = requests.post(url_address, files=files)
     response.raise_for_status()
-    return response.json()
+    return response.json()['photo'], response.json()['server'], response.json()['hash']
 
 
-def save_wall_image(access_token, group_id, photo):
+def save_wall_image(access_token, group_id, photo, server, photo_hash):
     api_version = 5.154
     payload = {
         'access_token': access_token,
         'group_id': group_id,
-        'photo': photo['photo'],
-        'server': photo['server'],
-        'hash': photo['hash'],
+        'photo': photo,
+        'server': server,
+        'hash': photo_hash,
         'v': api_version
     }
     url = 'https://api.vk.com/method/photos.saveWallPhoto'
     response = requests.get(url, params=payload)
     response.raise_for_status()
-    return response.json()['response']
+    attachments = response.json()['response']
+    owner_id = None
+    save_id = None
+    for attachment in attachments:
+        owner_id = attachment['owner_id']
+        save_id = attachment['id']
+    return owner_id, save_id
 
 
-def create_wall_post(access_token, group_id, saved_image, comment):
+def create_wall_post(access_token, group_id, owner_id, save_id, comment):
     api_version = 5.154
     payload = {
         'access_token': access_token,
         'owner_id': f'-{group_id}',
         'from_group': 1,
         'message': comment,
-        'attachments': f'photo{saved_image["owner_id"]}_{saved_image["id"]}',
+        'attachments': f'photo{owner_id}_{save_id}',
         'v': api_version
     }
     url = 'https://api.vk.com/method/wall.post'
@@ -108,11 +114,11 @@ def main():
     url_address = get_upload_url(vk_access_token, vk_group_id)
     img_path = os.path.join('images', f'{comics_img_name}{comics_image_ext}')
     try:
-        uploaded_photo = upload_image(img_path, url_address)
+        photo, server, photo_hash = upload_image(img_path, url_address)
     finally:
         os.remove(img_path)
-    saved_image = save_wall_image(vk_access_token, vk_group_id, uploaded_photo)
-    create_wall_post(vk_access_token, vk_group_id, *saved_image, comics_img_comment)
+    owner_id, save_id = save_wall_image(vk_access_token, vk_group_id, photo, server, photo_hash)
+    create_wall_post(vk_access_token, vk_group_id, owner_id, save_id, comics_img_comment)
 
 
 if __name__ == '__main__':
