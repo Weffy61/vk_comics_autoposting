@@ -43,6 +43,7 @@ def get_upload_url(access_token, group_id):
     url = 'https://api.vk.com/method/photos.getWallUploadServer'
     response = requests.get(url, params=payload)
     response.raise_for_status()
+    raise_for_vk_status(response.json())
     return response.json()['response']['upload_url']
 
 
@@ -53,6 +54,7 @@ def upload_image(img_path, url_address):
         }
         response = requests.post(url_address, files=files)
     response.raise_for_status()
+    raise_for_vk_status(response.json())
     return response.json()['photo'], response.json()['server'], response.json()['hash']
 
 
@@ -69,6 +71,7 @@ def save_wall_image(access_token, group_id, photo, server, photo_hash):
     url = 'https://api.vk.com/method/photos.saveWallPhoto'
     response = requests.get(url, params=payload)
     response.raise_for_status()
+    raise_for_vk_status(response.json())
     attachments = response.json()['response']
     owner_id = None
     save_id = None
@@ -91,6 +94,7 @@ def create_wall_post(access_token, group_id, owner_id, save_id, comment):
     url = 'https://api.vk.com/method/wall.post'
     response = requests.get(url, params=payload)
     response.raise_for_status()
+    raise_for_vk_status(response.json())
 
 
 def get_random_comics_url():
@@ -100,6 +104,16 @@ def get_random_comics_url():
     max_comics_number = response.json()['num']
     random_comics_number = random.randrange(1, max_comics_number + 1)
     return f'https://xkcd.com/{random_comics_number}/info.0.json'
+
+
+def raise_for_vk_status(request):
+    if request.get("error"):
+        status_code = request['error']['error_code']
+        reason = request['error']['error_msg']
+        http_error_msg = (
+            f"{status_code} VK API Error: {reason}"
+        )
+        raise requests.HTTPError(http_error_msg)
 
 
 def main():
