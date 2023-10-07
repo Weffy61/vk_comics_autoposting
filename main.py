@@ -12,7 +12,7 @@ def get_file_extension(url):
     return extension
 
 
-def save_image(link, image_name):
+def download_image(link, image_name):
     image_extension = get_file_extension(link)
     path = os.path.join('images', f'{image_name}{image_extension}')
     response = requests.get(link)
@@ -28,7 +28,7 @@ def get_comic(link):
     response_content = response.json()
     image_name = response_content['title']
     image_link = response_content['img']
-    image_extension = save_image(image_link, image_name)
+    image_extension = download_image(image_link, image_name)
     image_comment = response_content['alt']
     return image_name, image_extension, image_comment
 
