@@ -75,12 +75,9 @@ def save_wall_image(access_token, group_id, photo, server, photo_hash):
     response.raise_for_status()
     wall_image = response.json()
     raise_for_vk_status(wall_image)
-    attachments = wall_image['response']
-    owner_id = None
-    save_id = None
-    for attachment in attachments:
-        owner_id = attachment['owner_id']
-        save_id = attachment['id']
+    attachments = wall_image['response'][0]
+    owner_id = attachments['owner_id']
+    save_id = attachments['id']
     return owner_id, save_id
 
 
